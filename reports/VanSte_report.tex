@@ -1,0 +1,224 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{a4paper, left=25mm, right=25mm, top=25mm, bottom=25mm}
+
+\title{Анализ ассортимента оптового производителя для выявления KVI-товаров}
+\author{Ванюшкин Степан ИУ6-13М}
+\date{Декабрь 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{center}
+\textbf{Аннотация}
+\end{center}
+\noindent
+В данном отчёте представлены результаты анализа ассортимента оптового производителя с целью выявления KVI-товаров (Key Value Items). Для кластеризации товаров использовались методы многомерного анализа данных: PCA, t-SNE и Agglomerative Clustering. Были обработаны данные о продажах, включая выручку, количество проданных единиц и среднюю цену за единицу товара. В результате кластеризации выделено 5 групп товаров, каждая из которых характеризуется уникальными параметрами. На основе анализа предложены рекомендации по оптимизации ассортимента и ценообразования.
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Введение}
+В данном исследовании рассматривается задача анализа ассортимента оптового производителя с целью выявления KVI-товаров (Key Value Items). Для анализа использовались методы многомерной статистики: PCA, t-SNE и Agglomerative Clustering.
+
+\section{Цели и задачи}
+\begin{itemize}
+    \item Агрегация данных о продажах товаров.
+    \item Применение методов снижения размерности (PCA, t-SNE) для визуализации данных.
+    \item Кластеризация товаров с использованием Agglomerative Clustering.
+    \item Анализ полученных кластеров для выявления KVI-товаров.
+\end{itemize}
+
+\section{Данные}
+В исследовании использовался датасет из 95438 записей, содержащий следующие поля:
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lc}
+        \toprule
+        \textbf{Поле} & \textbf{Описание} \\
+        \midrule
+        PRODUCT\_ID & Уникальный идентификатор товара \\
+        CALDAY & Дата продажи \\
+        REVENUE & Выручка от продажи \\
+        QNTY & Количество проданных единиц \\
+        \bottomrule
+    \end{tabular}
+    \caption{Структура исходных данных}
+\end{table}
+
+\section{Методы анализа}
+\subsection{Подготовка данных}
+Данные были агрегированы по каждому товару, рассчитаны следующие метрики:
+\begin{itemize}
+    \item Общая выручка (Total Revenue)
+    \item Общее количество проданных единиц (Total Quantity)
+    \item Средняя цена за единицу (Average Price per Unit)
+    \item Количество транзакций (Number of Transactions)
+\end{itemize}
+
+\subsection{Нормализация данных}
+Для кластеризации данные были нормализованы с использованием \texttt{StandardScaler}.
+
+\subsection{Методы кластеризации}
+Для кластеризации использовался метод Agglomerative Clustering с количеством кластеров \( n = 5 \).
+
+\section{Результаты}
+
+\subsection{Визуализация кластеров}
+На рисунке \ref{fig:tsne} представлена визуализация кластеров товаров в пространстве t-SNE.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{output.png}
+    \caption{Визуализация кластеров товаров (t-SNE)}
+    \label{fig:tsne}
+\end{figure}
+
+\subsection{Средние значения по кластерам}
+В таблице \ref{table:clusters} представлены средние значения метрик для каждого кластера.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Кластер} & \textbf{Total Revenue} & \textbf{Total Quantity} & \textbf{Average Price}\\
+        \midrule
+        0 & \num{7.93e5} & \num{4.51e3} & \num{2023.21}\\
+        1 & \num{3.23e7} & \num{5.69e4} & \num{2226.75}\\
+        2 & \num{1.35e8} & \num{2.71e5} & \num{3536.96}\\
+        3 & \num{7.76e8} & \num{1.41e7} & \num{55.06}\\
+        4 & \num{7.09e5} & \num{14.73} & \num{52116.46}\\
+        \bottomrule
+    \end{tabular}
+    \caption{Средние значения по кластерам}
+    \label{table:clusters}
+\end{table}
+\addtocounter{table}{-1}
+\begin{table}[h]
+    \centering
+    \begin{tabular}{lcc}
+        \toprule
+        \textbf{Кластер} & \textbf{Number of Transactions} & \textbf{Number of Products} \\
+        \midrule
+        0 & \num{11.42} & \num{5042} \\
+        1 & \num{285.90} & \num{83} \\
+        2 & \num{909.38} & \num{13} \\
+        3 & \num{944.00} & \num{1} \\
+        4 & \num{4.36} & \num{59} \\
+        \bottomrule
+    \end{tabular}
+    \caption{Средние значения по кластерам}
+    \label{table:clusters}
+\end{table}
+
+\subsection{Топ-5 товаров по выручке в каждом кластере}
+
+\subsubsection{Кластер 0}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{PRODUCT\_ID} & \textbf{Total Revenue} & \textbf{Total Quantity} & \textbf{Average Price} \\
+        \midrule
+        521486 & \num{44897957.49} & \num{3823.63} & \num{11742.23} \\
+        74456 & \num{43248029.30} & \num{10258.56} & \num{4215.80} \\
+        38694 & \num{41980470.04} & \num{4938.41} & \num{8500.81} \\
+        691729 & \num{41190555.78} & \num{114150.00} & \num{360.85} \\
+        76469 & \num{39910576.42} & \num{5684.76} & \num{7020.62} \\
+        \bottomrule
+    \end{tabular}
+    \caption{Топ-5 товаров в кластере 0 по выручке}
+\end{table}
+
+\subsubsection{Кластер 1}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{PRODUCT\_ID} & \textbf{Total Revenue} & \textbf{Total Quantity} & \textbf{Average Price} \\
+        \midrule
+        591278 & \num{2.46e8} & \num{364192.50} & \num{674.71} \\
+        500460 & \num{1.65e8} & \num{208740.00} & \num{791.15} \\
+        500464 & \num{1.49e8} & \num{144984.00} & \num{1028.09} \\
+        524894 & \num{1.46e8} & \num{14080.61} & \num{10399.62} \\
+        644712 & \num{1.35e8} & \num{179493.55} & \num{752.84} \\
+        \bottomrule
+    \end{tabular}
+    \caption{Топ-5 товаров в кластере 1 по выручке}
+\end{table}
+
+\subsubsection{Кластер 2}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{PRODUCT\_ID} & \textbf{Total Revenue} & \textbf{Total Quantity} & \textbf{Average Price} \\
+        \midrule
+        100 & \num{4.30e8} & \num{1.21e6} & \num{355.27} \\
+        582416 & \num{2.46e8} & \num{2.47e4} & \num{9968.63} \\
+        1799 & \num{2.03e8} & \num{5.21e5} & \num{390.21} \\
+        582406 & \num{1.74e8} & \num{1.88e4} & \num{9253.91} \\
+        418314 & \num{9.60e7} & \num{1.02e4} & \num{9390.63} \\
+        \bottomrule
+    \end{tabular}
+    \caption{Топ-5 товаров в кластере 2 по выручке}
+\end{table}
+
+\subsubsection{Кластер 3}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{PRODUCT\_ID} & \textbf{Total Revenue} & \textbf{Total Quantity} & \textbf{Average Price} \\
+        \midrule
+        616446 & \num{7.76e8} & \num{1.41e7} & \num{55.06} \\
+        \bottomrule
+    \end{tabular}
+    \caption{Единственный товар в кластере 3}
+\end{table}
+
+\subsubsection{Кластер 4}
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{PRODUCT\_ID} & \textbf{Total Revenue} & \textbf{Total Quantity} & \textbf{Average Price} \\
+        \midrule
+        4521345 & \num{27815373.01} & \num{533.31} & \num{52156.53} \\
+        444466 & \num{2565283.31} & \num{69.83} & \num{36737.73} \\
+        444467 & \num{1483025.08} & \num{38.65} & \num{38371.03} \\
+        4492287 & \num{1292679.43} & \num{31.14} & \num{41511.86} \\
+        4495917 & \num{1039274.25} & \num{21.92} & \num{47422.53} \\
+        \bottomrule
+    \end{tabular}
+    \caption{Топ-5 товаров в кластере 4 по выручке}
+\end{table}
+
+\section{Выводы}
+В результате кластеризации были выявлены группы товаров с различными характеристиками:
+
+\begin{itemize}
+    \item \textbf{Кластер 0:} Товары с умеренной выручкой и количеством продаж, средняя цена за единицу около \num{2023.21}. Возможные KVI-кандидаты.
+    \item \textbf{Кластер 1:} Товары с высокой выручкой и количеством продаж, средняя цена за единицу около \num{2226.75}. Потенциальные KVI-товары.
+    \item \textbf{Кластер 2:} Товары с очень высокой выручкой и количеством продаж, средняя цена за единицу около \num{3536.96}. Премиальные товары.
+    \item \textbf{Кластер 3:} Товары с самой высокой выручкой и огромным количеством продаж, но очень низкой средней ценой (\num{55.06}). Товары массового спроса.
+    \item \textbf{Кластер 4:} Товары с низкой выручкой и количеством продаж, но очень высокой средней ценой (\num{52116.46}). Нишевые или специализированные товары.
+\end{itemize}
+
+
+Проведённый анализ средних характеристик кластеров формально указывает на возможность выявления KVI-товаров (Key Value Items). Однако качество самой кластеризации вызывает обоснованные сомнения в её эффективности. Один из кластеров объединил подавляющее большинство товаров ассортимента, что противоречит ожидаемой дифференциации групп. Согласно полученным данным, товары в этом кластере должны относиться к категории KVI, но такое распределение не позволяет реализовать стратегию точечного ценообразования для оптимизации продаж.\par
+Подобная структура кластеров свидетельствует о недостаточной чувствительности выбранного метода к специфическим закономерностям оптовой торговли. Это, в свою очередь, снижает надёжность результатов и ставит под вопрос их применимость для принятия управленческих решений. Таким образом, для повышения точности анализа требуется пересмотреть подход к кластеризации, возможно, с использованием альтернативных алгоритмов или дополнительных признаков, более адекватно отражающих особенности исследуемого рынка.
+
+
+\end{document}
